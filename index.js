@@ -57,7 +57,7 @@ function middleware (options, req, res, next) {
     res.pipe(res)
 
     // workaround for node 8
-    res.__proto__._headers = res._headers
+    Object.getPrototypeOf(res)._headers = res._headers
   })
 
   next()
