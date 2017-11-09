@@ -55,6 +55,9 @@ function middleware (options, req, res, next) {
     patch(options, res)
 
     res.pipe(res)
+
+    // workaround for node 8
+    res.__proto__._headers = res._headers
   })
 
   next()
