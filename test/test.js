@@ -110,6 +110,20 @@ describe('patch-headers', function () {
       })
     })
 
+    it('should ignore static if the property value is null', function () {
+      var res = new http.ServerResponse({})
+
+      res.setHeader('a', '1')
+      res.setHeader('b', '2')
+
+      patchHeaders.patch({static: {a: null}}, res)
+
+      assert.deepEqual(res._headers, {
+        'a': '1',
+        'b': '2'
+      })
+    })
+
     it('should add headers defined in static', function () {
       var res = new http.ServerResponse({})
 

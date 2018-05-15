@@ -32,7 +32,10 @@ function patch (options, res) {
   // add static headers
   if (options.static) {
     Object.keys(options.static).forEach(function (name) {
-      res.setHeader(name, options.static[name])
+      // ignore null values
+      if (options.static[name] !== null) {
+        res.setHeader(name, options.static[name])
+      }
     })
   }
 
