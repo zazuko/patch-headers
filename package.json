@@ -1,6 +1,6 @@
 {
   "name": "patch-headers",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Express middleware to patch response headers written by another handler or middleware",
   "main": "index.js",
   "scripts": {
