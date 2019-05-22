@@ -1,28 +1,26 @@
-var hijackResponse = require('hijackresponse')
+const hijackResponse = require('hijackresponse')
 
 function includesIgnoreCase (array, value) {
-  var valueLowerCase = value.toLowerCase()
+  const valueLowerCase = value.toLowerCase()
 
-  return array.filter(function (item) {
-    return item.toLowerCase() === valueLowerCase
-  }).length > 0
+  return array.filter((item) => item.toLowerCase() === valueLowerCase).length
 }
 
 function patch (options, res) {
-  res._headers = res._headers || {}
+  const headers = res.getHeaders()
 
-  // white list for headers
+  // whitelist for headers
   if (options.allow) {
-    Object.keys(res._headers).forEach(function (name) {
+    Object.keys(headers).forEach((name) => {
       if (!includesIgnoreCase(options.allow, name)) {
         res.removeHeader(name)
       }
     })
   }
 
-  // black list for headers
+  // blacklist for headers
   if (options.remove) {
-    Object.keys(res._headers).forEach(function (name) {
+    Object.keys(headers).forEach((name) => {
       if (includesIgnoreCase(options.remove, name)) {
         res.removeHeader(name)
       }
@@ -31,36 +29,35 @@ function patch (options, res) {
 
   // add static headers
   if (options.static) {
-    Object.keys(options.static).forEach(function (name) {
-      // ignore null values
-      if (options.static[name] !== null) {
-        res.setHeader(name, options.static[name])
-      }
-    })
+    Object.entries(options.static)
+      .forEach(([name, value]) => {
+        // ignore null values
+        if (value !== null) {
+          res.setHeader(name, value)
+        }
+      })
   }
 
   // change headers with callback
   if (options.callback) {
-    res._headers = options.callback(res._headers)
+    Object.entries(options.callback(headers))
+      .forEach(([key, val]) => {
+        res.setHeader(key, val)
+      })
   }
 }
 
-function middleware (options, req, res, next) {
-  options = options || {}
-
-  hijackResponse(res, function (err, res) {
+function middleware (options = {}, req, res, next) {
+  hijackResponse(res, (err, res) => {
     if (err) {
       res.unhijack()
-
-      return next(err)
+      next(err)
+      return
     }
 
     patch(options, res)
 
     res.pipe(res)
-
-    // workaround for node 8
-    Object.getPrototypeOf(res)._headers = res._headers
   })
 
   next()
