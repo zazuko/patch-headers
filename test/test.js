@@ -198,7 +198,7 @@ describe('patch-headers', function () {
   })
 
   describe('factory', function () {
-    it("should build a middleware', function", (done) => {
+    it('should build a middleware', (done) => {
       const app = express()
 
       app.use(patchHeaders({ static: { 'a': '1' } }))
