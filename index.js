@@ -1,9 +1,8 @@
 const hijackResponse = require('hijackresponse')
 
 function includesIgnoreCase (array, value) {
-  const valueLowerCase = value.toLowerCase()
-
-  return array.filter((item) => item.toLowerCase() === valueLowerCase).length
+  const lowerCaseValue = value.toLowerCase()
+  return array.find((item) => item.toLowerCase() === lowerCaseValue) !== undefined
 }
 
 function patch (options, res) {
