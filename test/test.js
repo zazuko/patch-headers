@@ -27,8 +27,8 @@ describe('patch-headers', function () {
       patchHeaders.patch({ allow: null }, res)
 
       assert.deepStrictEqual(res.getHeaders(), wrap({
-        'a': '1',
-        'b': '2'
+        a: '1',
+        b: '2'
       }))
     })
 
@@ -41,7 +41,7 @@ describe('patch-headers', function () {
       patchHeaders.patch({ allow: ['a'] }, res)
 
       assert.deepStrictEqual(res.getHeaders(), wrap({
-        'a': '1'
+        a: '1'
       }))
     })
 
@@ -54,7 +54,7 @@ describe('patch-headers', function () {
       patchHeaders.patch({ allow: ['A'] }, res)
 
       assert.deepStrictEqual(res.getHeaders(), wrap({
-        'a': '1'
+        a: '1'
       }))
     })
 
@@ -67,8 +67,8 @@ describe('patch-headers', function () {
       patchHeaders.patch({ remove: null }, res)
 
       assert.deepStrictEqual(res.getHeaders(), wrap({
-        'a': '1',
-        'b': '2'
+        a: '1',
+        b: '2'
       }))
     })
 
@@ -81,7 +81,7 @@ describe('patch-headers', function () {
       patchHeaders.patch({ remove: ['a'] }, res)
 
       assert.deepStrictEqual(res.getHeaders(), wrap({
-        'b': '2'
+        b: '2'
       }))
     })
 
@@ -94,7 +94,7 @@ describe('patch-headers', function () {
       patchHeaders.patch({ remove: ['A'] }, res)
 
       assert.deepStrictEqual(res.getHeaders(), wrap({
-        'b': '2'
+        b: '2'
       }))
     })
 
@@ -107,8 +107,8 @@ describe('patch-headers', function () {
       patchHeaders.patch({ static: null }, res)
 
       assert.deepStrictEqual(res.getHeaders(), wrap({
-        'a': '1',
-        'b': '2'
+        a: '1',
+        b: '2'
       }))
     })
 
@@ -121,8 +121,8 @@ describe('patch-headers', function () {
       patchHeaders.patch({ static: { a: null } }, res)
 
       assert.deepStrictEqual(res.getHeaders(), wrap({
-        'a': '1',
-        'b': '2'
+        a: '1',
+        b: '2'
       }))
     })
 
@@ -132,12 +132,12 @@ describe('patch-headers', function () {
       res.setHeader('a', '1')
       res.setHeader('b', '2')
 
-      patchHeaders.patch({ static: { 'c': '3' } }, res)
+      patchHeaders.patch({ static: { c: '3' } }, res)
 
       assert.deepStrictEqual(res.getHeaders(), wrap({
-        'a': '1',
-        'b': '2',
-        'c': '3'
+        a: '1',
+        b: '2',
+        c: '3'
       }))
     })
 
@@ -150,8 +150,8 @@ describe('patch-headers', function () {
       patchHeaders.patch({ callback: null }, res)
 
       assert.deepStrictEqual(res.getHeaders(), wrap({
-        'a': '1',
-        'b': '2'
+        a: '1',
+        b: '2'
       }))
     })
 
@@ -162,7 +162,7 @@ describe('patch-headers', function () {
       res.setHeader('b', '2')
 
       const patch = function (headers) {
-        headers['a'] = (parseInt(headers['a']) + 2).toString()
+        headers.a = (parseInt(headers.a) + 2).toString()
 
         return headers
       }
@@ -170,8 +170,8 @@ describe('patch-headers', function () {
       patchHeaders.patch({ callback: patch }, res)
 
       assert.deepStrictEqual(res.getHeaders(), wrap({
-        'a': '3',
-        'b': '2'
+        a: '3',
+        b: '2'
       }))
     })
   })
@@ -181,9 +181,11 @@ describe('patch-headers', function () {
       const app = express()
 
       app.use(function (req, res, next) {
-        patchHeaders.middleware({ static: {
-          'a': '1'
-        } }, req, res, next)
+        patchHeaders.middleware({
+          static: {
+            a: '1'
+          }
+        }, req, res, next)
       })
 
       app.use(function (req, res) {
@@ -201,7 +203,7 @@ describe('patch-headers', function () {
     it('should build a middleware', (done) => {
       const app = express()
 
-      app.use(patchHeaders({ static: { 'a': '1' } }))
+      app.use(patchHeaders({ static: { a: '1' } }))
 
       app.use(function (req, res) {
         res.end('test')
